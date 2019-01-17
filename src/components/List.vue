@@ -15,6 +15,7 @@
                       cols="30"
                       rows="5"
                       :disabled="submitStatus"
+                      :value="txtContent"
                       @input="txtInput($event)"
             ></textarea>
             <button class="item-submit"
@@ -39,6 +40,7 @@ export default {
     data(){
         return {
             contentShow: false,
+            txtContent: '',
             txtLen: 0,
             submitStatus: false
         }
@@ -65,10 +67,26 @@ export default {
             if(val.length > 100){
                 ev.target.value = val.slice(0, 100);
             }
+            this.txtContent = ev.target.value;
             this.txtLen = ev.target.value.length;
         },
-        submitModal(){
+        submitModal() {
+            let val = this.txtContent.trim();
+            if(!val){
+                alert('申请内容不允许为空！');
+                return false;
+            }
             this.submitStatus = true;
+            this.ajax({
+                type: 'GET',
+                url: 'static/test.json',
+                successFn(data){
+                    console.info(data);
+                },
+                errorFn(e){
+                    console.error(e);
+                }
+            });
         }
     }
 }
